@@ -1,0 +1,30 @@
+syntax = "proto3";
+// 一般情况package可以按照「服务类型.项目名.服务名」方式命名
+package grpc.greeter.helloworld;
+// 如果需要生成go代码需要指定go_package, 通常是「服务类型/项目名/服务名」, 采用buf编译后, 将此处配置移动到了buf.gen.yaml配置go_package_prefix项，无须在此配置
+// option go_package="github.com/Q1mi/greeter/proto/helloworld";
+
+// 导入google/api/annotations.proto，此项依赖主要用于给接口设置http alias别名，一般是写在proto文件中写在每一个接口的option配置项，但采用buf编译后，远程依赖项移动到buf.yaml配置文件，http alias别名也可以通过配置专属yaml文件，最后在buf.gen.yaml生成配置中引入到gateway插件就完成了对应xx.pb.gw.go编译
+// import "google/api/annotations.proto";
+
+// 定义一个Greeter服务
+service Greeter {
+  // 打招呼方法
+  rpc SayHello (HelloRequest) returns (HelloReply) {
+    // 这里添加了google.api.http注释,采用buf编译后就不需要在此处配置了
+    // option (google.api.http) = {
+    //   post: "/v1/example/echo"
+    //   body: "*"
+    // };
+  }
+}
+
+// 定义请求的message
+message HelloRequest {
+  string name = 1;
+}
+
+// 定义响应的message
+message HelloReply {
+  string message = 1;
+}

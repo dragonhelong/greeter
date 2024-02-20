@@ -1,0 +1,28 @@
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/Q1mi/greeter/genproto # 前缀是go.mod中声明 + pb文件目录，猜测作用是使用pb的导入路径，跟原本写在proto文件相同：option go_package="github.com/Q1mi/greeter/proto/helloworld";
+    except:
+      - buf.build/googleapis/googleapis # 需要在托管模式中将buf.yaml中配置的依赖排除掉，否则编译会有问题，具体原因还有待研究
+plugins:
+  - plugin: go # 使用本地protoc-gen-go插件
+    # - plugin: buf.build/protocolbuffers/go # 使用buf远程protoc-gen-go插件
+    out: genproto/go
+    opt:
+      - paths=source_relative
+  - plugin: go-grpc # 使用本地protoc-gen-go-grpc插件
+    # - plugin: buf.build/grpc/go:v1.2.0 # 使用buf远程protoc-gen-go-grpc插件，并制定插件版本
+    out: genproto/go
+    opt:
+      - paths=source_relative
+  - plugin: grpc-gateway # 使用本地protoc-gen-grpc-gateway插件
+    out: genproto/go
+    opt:
+      - paths=source_relative
+      - grpc_api_configuration=proto/v1/hello_world.yaml
+
+  - plugin: buf.build/bufbuild/es # 使用buf远程es插件生成typescript语言pb
+    out: genproto/ts
+    # opt:
+    #   - paths=source_relative

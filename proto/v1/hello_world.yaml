@@ -1,0 +1,10 @@
+type: google.api.Service
+config_version: 3
+name: User service apis
+
+http:
+  rules:
+    # user register，一般是proto中package名称 + service名称 + 具体接口名称
+    - selector: grpc.greeter.helloworld.Greeter.SayHello
+      get: /user/v1/register
+      # body: "*"
