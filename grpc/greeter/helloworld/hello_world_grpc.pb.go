@@ -2,11 +2,11 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             (unknown)
-// source: v1/hello_world.proto
+// source: helloworld/hello_world.proto
 
 // 一般情况package可以按照「服务类型.项目名.服务名」方式命名
 
-package v1
+package helloworld
 
 import (
 	context "context"
@@ -109,5 +109,5 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "v1/hello_world.proto",
+	Metadata: "helloworld/hello_world.proto",
 }
