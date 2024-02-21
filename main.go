@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
-	helloworldpb "github.com/dragonhelong/grpc_greeter_helloworld/grpc/greeter/helloworld"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime" // 注意v2版本
+	helloworldpb "github.com/looongda/grpc_greeter_helloworld/grpc/greeter/helloworld"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
