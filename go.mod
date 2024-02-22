@@ -1,4 +1,4 @@
-module github.com/looongda/grpc_greeter_helloworld
+module github.com/loonghe/grpc_greeter_helloworld
 
 go 1.17
 

@@ -2,7 +2,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/looongda/grpc_greeter_helloworld/grpc/greeter/helloworld # 前缀是go.mod中声明 + pb文件目录，猜测作用是使用pb的导入路径，跟原本写在proto文件相同：option go_package="github.com/looongda/grpc_greeter_helloworld/proto/helloworld";
+    default: github.com/loonghe/grpc_greeter_helloworld/grpc/greeter/helloworld # 前缀是go.mod中声明 + pb文件目录，猜测作用是使用pb的导入路径，跟原本写在proto文件相同：option go_package="github.com/loonghe/grpc_greeter_helloworld/proto/helloworld";
     except:
       - buf.build/googleapis/googleapis # 需要在托管模式中将buf.yaml中配置的依赖排除掉，否则编译会有问题，具体原因还有待研究
 plugins:
