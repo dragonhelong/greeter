@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"net"
 	"net/http"
@@ -9,6 +10,8 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime" // 注意v2版本
 	helloworldpb "github.com/loonghe/grpc_greeter_helloworld/grpc/greeter/helloworld"
+	"github.com/loonghe/grpc_greeter_helloworld/pkg/config"
+	"github.com/loonghe/grpc_greeter_helloworld/pkg/zaplog"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
@@ -40,8 +43,10 @@ func (s *server) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 
 // 参数校验拦截插件
 func ServerValidationUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	zaplog.Sugar.Infof("%+v", req)
 	if r, ok := req.(Validator); ok {
 		if err := r.ValidateAll(); err != nil {
+			zaplog.Sugar.Errorf("req validate error %v", err)
 			return nil, err
 		}
 	}
@@ -50,6 +55,15 @@ func ServerValidationUnaryInterceptor(ctx context.Context, req interface{}, info
 }
 
 func main() {
+	// 实现加载静态配置文件并初始化日志
+	configFilePath := flag.String("c", "./", "config file path")
+	flag.Parse()
+	if err := config.Load(*configFilePath); err != nil {
+		panic(err)
+	}
+	zaplog.Init(config.Viper.GetString("zaplog.path"))
+	defer zaplog.Sync()
+	zaplog.Sugar.Info("server is running")
 	// Create a listener on TCP port
 	lis, err := net.Listen("tcp", ":8091")
 	if err != nil {

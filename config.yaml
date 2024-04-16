@@ -1,0 +1,2 @@
+zaplog:
+  path: "./service.log"
