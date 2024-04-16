@@ -3,6 +3,7 @@ module github.com/loonghe/grpc_greeter_helloworld
 go 1.17
 
 require (
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd
 	google.golang.org/grpc v1.47.0

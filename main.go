@@ -13,18 +13,40 @@ import (
 	"golang.org/x/net/http2/h2c"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type server struct {
 	helloworldpb.UnimplementedGreeterServer
 }
 
+type Validator interface {
+	ValidateAll() error
+}
+
 func NewServer() *server {
 	return &server{}
 }
 
+// register接口实现
 func (s *server) SayHello(ctx context.Context, in *helloworldpb.HelloRequest) (*helloworldpb.HelloReply, error) {
 	return &helloworldpb.HelloReply{Message: in.Name + " world"}, nil
+}
+
+// logout接口实现
+func (s *server) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, nil
+}
+
+// 参数校验拦截插件
+func ServerValidationUnaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	if r, ok := req.(Validator); ok {
+		if err := r.ValidateAll(); err != nil {
+			return nil, err
+		}
+	}
+
+	return handler(ctx, req)
 }
 
 func main() {
@@ -34,8 +56,8 @@ func main() {
 		log.Fatalln("Failed to listen:", err)
 	}
 
-	// 创建一个gRPC server对象
-	s := grpc.NewServer()
+	// 创建一个gRPC server对象，并且在grpc拦截器中加入各种拦截插件
+	s := grpc.NewServer(grpc.ChainUnaryInterceptor(ServerValidationUnaryInterceptor))
 	// 注册Greeter service到server
 	helloworldpb.RegisterGreeterServer(s, &server{})
 

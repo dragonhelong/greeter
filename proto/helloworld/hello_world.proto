@@ -1,30 +1,48 @@
 syntax = "proto3";
 // 一般情况package可以按照「服务类型.项目名.服务名」方式命名
 package grpc.greeter.helloworld;
-// 如果需要生成go代码需要指定go_package, 通常是「服务类型/项目名/服务名」, 采用buf编译后, 将此处配置移动到了buf.gen.yaml配置go_package_prefix项，无须在此配置
-// option go_package="github.com/Q1mi/greeter/proto/helloworld";
+// 如果需要生成go代码需要指定go_package, 通常是「服务类型/项目名/服务名」,
+// 采用buf编译后,
+// 将此处配置移动到了buf.gen.yaml配置go_package_prefix项，无须在此配置 option
+// go_package="github.com/Q1mi/greeter/proto/helloworld";
 
-// 导入google/api/annotations.proto，此项依赖主要用于给接口设置http alias别名，一般是写在proto文件中写在每一个接口的option配置项，但采用buf编译后，远程依赖项移动到buf.yaml配置文件，http alias别名也可以通过配置专属yaml文件，最后在buf.gen.yaml生成配置中引入到gateway插件就完成了对应xx.pb.gw.go编译
+// 导入google/api/annotations.proto，此项依赖主要用于给接口设置http
+// alias别名，一般是写在proto文件中写在每一个接口的option配置项，但采用buf编译后，远程依赖项移动到buf.yaml配置文件，http
+// alias别名也可以通过配置专属yaml文件，最后在buf.gen.yaml生成配置中引入到gateway插件就完成了对应xx.pb.gw.go编译
 // import "google/api/annotations.proto";
+// 解决vscode报import红波浪线
+// https://blog.csdn.net/qq_42123832/article/details/128510491
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "validate/validate.proto";
 
 // 定义一个Greeter服务
 service Greeter {
   // 打招呼方法
-  rpc SayHello (HelloRequest) returns (HelloReply) {
+  rpc SayHello(HelloRequest) returns (HelloReply) {
     // 这里添加了google.api.http注释,采用buf编译后就不需要在此处配置了
     // option (google.api.http) = {
     //   post: "/v1/example/echo"
     //   body: "*"
     // };
   }
+  // 示例入参为empty场景的proto写法，对应empty.proto引用
+  rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 }
 
-// 定义请求的message
+// 定义请求的message，并设置参数验证
 message HelloRequest {
-  string name = 1;
+  string name = 1 [(validate.rules).string = {
+    pattern: "^[a-zA-Z0-9_]*$",
+    min_len: 6,
+    max_len: 16
+  }];
 }
 
 // 定义响应的message
 message HelloReply {
   string message = 1;
+  // 示例proto引入非基础类型的用法，对应struct.proto引用
+  google.protobuf.ListValue data = 2;
+  google.protobuf.Struct obj = 3;
 }
