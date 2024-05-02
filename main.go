@@ -153,11 +153,11 @@ func main() {
 	defer cancel()
 
 	// 请求时,将http header中某些字段转发到grpc上下文, 例如token验证场景，rpc请求直接将token塞进metadata, 服务端即可从ctx解析，如果是http请求，一般是将token塞进header，此时需要在grpc-gateway将指定header转发到grpc上下文
-	inComingOpt := runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
-		switch s {
+	inComingOpt := runtime.WithIncomingHeaderMatcher(func(key string) (string, bool) {
+		switch key {
 		// 只需要对需要转发的header进行设置，转到context的字段命名不变
 		case "App-Id", "App-Secret":
-			return s, true
+			return key, true
 		default:
 			return "", false
 			// 使用默认处理会在http原始header加grpcgateway-前缀转发到上下文呢
@@ -165,7 +165,7 @@ func main() {
 		}
 	})
 	// 响应后,grpc上下文转发到http头部
-	outGoingOpt := runtime.WithOutgoingHeaderMatcher(func(s string) (string, bool) {
+	outGoingOpt := runtime.WithOutgoingHeaderMatcher(func(key string) (string, bool) {
 		return "", false
 	})
 
