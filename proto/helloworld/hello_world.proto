@@ -15,6 +15,16 @@ package grpc.greeter.helloworld;
 import "google/protobuf/empty.proto";
 import "google/protobuf/struct.proto";
 import "validate/validate.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+
+// 定义swagger内容, 本项目使用protoc-gen-swagger插件生成json，在此处定义swagger版本，支持的http/https协议等基础信息，内容会写进json
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "grpc gateway helloworld sample",
+    version: "1.0",
+  },
+  schemes: HTTP,
+};
 
 // 定义一个Greeter服务
 service Greeter {
@@ -44,5 +54,5 @@ message HelloReply {
   string message = 1;
   // 示例proto引入非基础类型的用法，对应struct.proto引用
   google.protobuf.ListValue data = 2;
-  google.protobuf.Struct obj = 3;
+  google.protobuf.Struct obj     = 3;
 }

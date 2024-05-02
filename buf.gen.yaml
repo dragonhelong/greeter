@@ -6,6 +6,7 @@ managed:
     except:
       - buf.build/googleapis/googleapis # 需要在托管模式中将buf.yaml中配置的依赖排除掉，否则编译会有问题，具体原因还有待研究
       - buf.build/envoyproxy/protoc-gen-validate
+      - buf.build/grpc-ecosystem/protoc-gen-swagger
 plugins:
   - plugin: go # 使用本地protoc-gen-go插件
     # - plugin: buf.build/protocolbuffers/go # 使用buf远程protoc-gen-go插件
@@ -27,6 +28,10 @@ plugins:
     opt:
       - lang=go
       - paths=source_relative
+  - plugin: swagger # 使用本地protoc-gen-swagger插件编译
+    out: grpc/greeter
+    opt:
+      - grpc_api_configuration=proto/helloworld/hello_world.yaml
 
   # - plugin: buf.build/bufbuild/es # 使用buf远程es插件生成typescript语言pb
   # out: genproto/ts

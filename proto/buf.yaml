@@ -2,6 +2,7 @@ version: v1
 deps:
   - buf.build/googleapis/googleapis # 这里配置proto需要的远程依赖项，一般就是google的api，按这个官方示例配置基本够用了
   - buf.build/envoyproxy/protoc-gen-validate # 参数验证依赖
+  - buf.build/grpc-ecosystem/protoc-gen-swagger # swagger依赖
 breaking:
   use:
     - FILE

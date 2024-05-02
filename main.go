@@ -13,6 +13,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime" // 注意v2版本
 	helloworldpb "github.com/loonghe/grpc_greeter_helloworld/grpc/greeter/helloworld"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/config"
+	"github.com/loonghe/grpc_greeter_helloworld/pkg/swagger"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/zaplog"
 	"github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
@@ -185,6 +186,10 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/", gwmux)
+
+	// 注册swagger
+	mux.HandleFunc("/swagger/", swagger.ServeSwaggerFile)
+	swagger.ServeSwaggerUI(mux)
 
 	// 定义HTTP server配置
 	gwServer := &http.Server{
