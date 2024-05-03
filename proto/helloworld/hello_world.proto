@@ -22,8 +22,36 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
   info: {
     title: "grpc gateway helloworld sample",
     version: "1.0",
+    license: {
+      name: "MIT",
+    },
   },
-  schemes: HTTP,
+  schemes: [ HTTP, HTTPS ],
+  // 在proto中指提供了设置single字段验证，如果需要多字段写入header验证，需要在protoc-gen-swagger生成代码后手动修改json配置
+  security_definitions: {
+    security: {
+      key: "app-secret",
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "app-secret",
+        description: "Authentication token, prefixed by Bearer.",
+      },
+    },
+  },
+  // 将需要校验的参数在swagger接口文档中以公共header设置
+  security: [
+    {
+      security_requirement: {
+        key: "app-secret",
+      },
+    },
+    {
+      security_requirement: {
+        key: "app-id",
+      },
+    }
+  ],
 };
 
 // 定义一个Greeter服务

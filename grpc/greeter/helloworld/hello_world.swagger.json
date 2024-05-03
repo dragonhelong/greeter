@@ -2,17 +2,14 @@
   "swagger": "2.0",
   "info": {
     "title": "grpc gateway helloworld sample",
-    "version": "1.0"
+    "version": "1.0",
+    "license": {
+      "name": "MIT"
+    }
   },
-  "schemes": [
-    "http"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/user/v1/logout": {
       "get": {
@@ -32,9 +29,7 @@
             }
           }
         },
-        "tags": [
-          "Greeter"
-        ]
+        "tags": ["Greeter"]
       }
     },
     "/user/v1/register": {
@@ -63,9 +58,7 @@
             "type": "string"
           }
         ],
-        "tags": [
-          "Greeter"
-        ]
+        "tags": ["Greeter"]
       }
     }
   },
@@ -106,9 +99,7 @@
     },
     "protobufNullValue": {
       "type": "string",
-      "enum": [
-        "NULL_VALUE"
-      ],
+      "enum": ["NULL_VALUE"],
       "default": "NULL_VALUE",
       "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
@@ -133,5 +124,27 @@
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "app-secret": {
+      "type": "apiKey",
+      "description": "Authentication token, prefixed by Bearer.",
+      "name": "app-secret",
+      "in": "header"
+    },
+    "app-id": {
+      "type": "apiKey",
+      "description": "Authentication token, prefixed by Bearer.",
+      "name": "app-id",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "app-secret": []
+    },
+    {
+      "app-id": []
+    }
+  ]
 }
