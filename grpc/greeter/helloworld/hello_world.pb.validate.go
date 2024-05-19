@@ -35,6 +35,212 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on UserReq with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UserReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserReq with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in UserReqMultiError, or nil if none found.
+func (m *UserReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return UserReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// UserReqMultiError is an error wrapping multiple validation errors returned
+// by UserReq.ValidateAll() if the designated constraints aren't met.
+type UserReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserReqMultiError) AllErrors() []error { return m }
+
+// UserReqValidationError is the validation error returned by UserReq.Validate
+// if the designated constraints aren't met.
+type UserReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UserReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UserReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UserReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UserReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UserReqValidationError) ErrorName() string { return "UserReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UserReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUserReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UserReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UserReqValidationError{}
+
+// Validate checks the field values on UserRes with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *UserRes) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UserRes with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in UserResMultiError, or nil if none found.
+func (m *UserRes) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UserRes) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Email
+
+	// no validation rules for Phone
+
+	if len(errors) > 0 {
+		return UserResMultiError(errors)
+	}
+
+	return nil
+}
+
+// UserResMultiError is an error wrapping multiple validation errors returned
+// by UserRes.ValidateAll() if the designated constraints aren't met.
+type UserResMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UserResMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UserResMultiError) AllErrors() []error { return m }
+
+// UserResValidationError is the validation error returned by UserRes.Validate
+// if the designated constraints aren't met.
+type UserResValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UserResValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UserResValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UserResValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UserResValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UserResValidationError) ErrorName() string { return "UserResValidationError" }
+
+// Error satisfies the builtin error interface
+func (e UserResValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUserRes.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UserResValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UserResValidationError{}
+
 // Validate checks the field values on HelloRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.

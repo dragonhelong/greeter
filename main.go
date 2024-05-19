@@ -12,6 +12,9 @@ import (
 	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime" // 注意v2版本
 	helloworldpb "github.com/loonghe/grpc_greeter_helloworld/grpc/greeter/helloworld"
+	"github.com/loonghe/grpc_greeter_helloworld/internal/logic"
+	"github.com/loonghe/grpc_greeter_helloworld/internal/repo/db"
+	"github.com/loonghe/grpc_greeter_helloworld/internal/service"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/config"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/swagger"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/zaplog"
@@ -26,30 +29,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
-
-type server struct {
-	helloworldpb.UnimplementedGreeterServer
-}
 
 type Validator interface {
 	ValidateAll() error
-}
-
-func NewServer() *server {
-	return &server{}
-}
-
-// register接口实现
-func (s *server) SayHello(ctx context.Context, in *helloworldpb.HelloRequest) (*helloworldpb.HelloReply, error) {
-	zaplog.WithTrace(ctx).Infof("register name is %d", in.Name)
-	return &helloworldpb.HelloReply{Message: in.Name + " world"}, nil
-}
-
-// logout接口实现
-func (s *server) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
 }
 
 var grpcGatewayTag = opentracing.Tag{Key: string(ext.Component), Value: "grpc-gateway"}
@@ -145,8 +128,10 @@ func main() {
 			ServerValidationUnaryInterceptor,
 		),
 	)
+	dbRegistry := db.NewMysql()
+	userUseCase := logic.NewUserUseCase(dbRegistry)
 	// 注册Greeter service到server
-	helloworldpb.RegisterGreeterServer(s, &server{})
+	helloworldpb.RegisterGreeterServer(s, service.NewService(userUseCase))
 
 	// gRPC-Gateway mux
 	// 初始化上下文

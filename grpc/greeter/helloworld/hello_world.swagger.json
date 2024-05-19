@@ -7,10 +7,48 @@
       "name": "MIT"
     }
   },
-  "schemes": ["http", "https"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
+    "/user/v1/GetUser": {
+      "get": {
+        "operationId": "Greeter_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/helloworldUserRes"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "Greeter"
+        ]
+      }
+    },
     "/user/v1/logout": {
       "get": {
         "summary": "示例入参为empty场景的proto写法，对应empty.proto引用",
@@ -29,7 +67,9 @@
             }
           }
         },
-        "tags": ["Greeter"]
+        "tags": [
+          "Greeter"
+        ]
       }
     },
     "/user/v1/register": {
@@ -58,7 +98,9 @@
             "type": "string"
           }
         ],
-        "tags": ["Greeter"]
+        "tags": [
+          "Greeter"
+        ]
       }
     }
   },
@@ -82,6 +124,24 @@
       },
       "title": "定义响应的message"
     },
+    "helloworldUserRes": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
@@ -99,7 +159,9 @@
     },
     "protobufNullValue": {
       "type": "string",
-      "enum": ["NULL_VALUE"],
+      "enum": [
+        "NULL_VALUE"
+      ],
       "default": "NULL_VALUE",
       "description": "`NullValue` is a singleton enumeration to represent the null value for the\n`Value` type union.\n\nThe JSON representation for `NullValue` is JSON `null`.\n\n - NULL_VALUE: Null value."
     },
@@ -130,12 +192,6 @@
       "type": "apiKey",
       "description": "Authentication token, prefixed by Bearer.",
       "name": "app-secret",
-      "in": "header"
-    },
-    "app-id": {
-      "type": "apiKey",
-      "description": "Authentication token, prefixed by Bearer.",
-      "name": "app-id",
       "in": "header"
     }
   },

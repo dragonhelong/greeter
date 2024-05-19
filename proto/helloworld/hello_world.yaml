@@ -12,3 +12,7 @@ http:
     - selector: grpc.greeter.helloworld.Greeter.Logout
       get: /user/v1/logout
       # body: "*"
+    # user info，一般是proto中package名称 + service名称 + 具体接口名称
+    - selector: grpc.greeter.helloworld.Greeter.GetUser
+      get: /user/v1/GetUser
+      # body: "*"

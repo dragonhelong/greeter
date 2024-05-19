@@ -66,6 +66,18 @@ service Greeter {
   }
   // 示例入参为empty场景的proto写法，对应empty.proto引用
   rpc Logout(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+  rpc GetUser(UserReq) returns (UserRes) {}
+}
+
+message UserReq {
+  uint64 id = 1;
+}
+message UserRes {
+  uint64 id    = 1;
+  string name  = 2;
+  string email = 3;
+  string phone = 4;
 }
 
 // 定义请求的message，并设置参数验证

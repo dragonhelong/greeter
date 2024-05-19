@@ -18,6 +18,7 @@ plugins:
     out: grpc/greeter
     opt:
       - paths=source_relative
+      - require_unimplemented_servers=false # 参数控制是否必须检查服务端是否完全实现接口，默认true导致无法实现依赖注入方式编码
   - plugin: grpc-gateway # 使用本地protoc-gen-grpc-gateway插件
     out: grpc/greeter
     opt:
