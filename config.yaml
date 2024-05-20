@@ -2,3 +2,5 @@ zaplog:
   path: "./service.log"
 mysql:
   dsn: "root:loonghe@tcp(127.0.0.1:13306)/loong?charset=utf8mb4&parseTime=True&loc=Local"
+server:
+  addr: "127.0.0.1:8091"
