@@ -10,6 +10,7 @@ import (
 	helloworldpb "github.com/loonghe/grpc_greeter_helloworld/grpc/greeter/helloworld"
 	"github.com/loonghe/grpc_greeter_helloworld/internal/logic"
 	"github.com/loonghe/grpc_greeter_helloworld/internal/repo/db"
+	"github.com/loonghe/grpc_greeter_helloworld/internal/repo/producer"
 	"github.com/loonghe/grpc_greeter_helloworld/internal/service"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/config"
 	"github.com/loonghe/grpc_greeter_helloworld/pkg/gateway"
@@ -71,9 +72,15 @@ func main() {
 		),
 	)
 	dbRegistry := db.NewMysql()
-	userUseCase := logic.NewUserUseCase(dbRegistry)
+	userProducer := producer.NewUserEvent(config.Viper.GetString("kafka.broker"), config.Viper.GetString("kafka.topic"))
+	userUseCase := logic.NewUserUseCase(dbRegistry, userProducer)
 	// 注册Greeter service到server
 	helloworldpb.RegisterGreeterServer(s, service.NewService(userUseCase))
+
+	// 注册消费者，启动一个goroutine消费kafka消息
+	go func() {
+		service.Handle(ctx)
+	}()
 
 	log.Println("Serving on http://127.0.0.1:8091")
 	// 使用gateway把grpcServer转成httpServer
